@@ -213,7 +213,6 @@ jupyter notebook Prediction/heart_disease.ipynb
 ## 👤 Author & Portofolio
 
 **Rizki Surya Nugroho**  
-📧 [EMAIL_ADDRESS](nugrohorizki20@gmail.com)
 🔗 [LinkedIn](https://www.linkedin.com/in/rizkisurya/) | [GitHub](https://github.com/NumiKun)
 
 ---
