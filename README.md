@@ -1,14 +1,22 @@
 # 🫀 Heart Disease Risk Prediction 2026
 
-> **Machine Learning pipeline** untuk memprediksi risiko penyakit jantung menggunakan tiga algoritma klasifikasi, dilengkapi eksplorasi data menyeluruh dan fitur inference data baru.
+> **Machine Learning Pipeline & Interactive Web Dashboard** untuk memprediksi risiko penyakit jantung menggunakan tiga algoritma klasifikasi (Logistic Regression, Random Forest, XGBoost), dilengkapi analisis eksplorasi data komprehensif, fitur penyimpan artefak model, serta aplikasi web interaktif berbasis Streamlit dengan mode tema Gelap/Terang (*Dark/Light Mode*).
 
 ---
 
 ## 📋 Deskripsi Proyek
 
-Proyek ini membangun model prediksi risiko penyakit jantung berbasis dataset sintetis `heart_disease_risk_2026.csv` yang memuat **9.001 pasien** dengan **26 fitur** klinis, demografis, dan gaya hidup. Pipeline mencakup seluruh tahapan data science — mulai dari **EDA**, **preprocessing**, **training 3 model**, **evaluasi komprehensif**, hingga **inference data pasien baru**.
+Proyek ini membangun sistem end-to-end prediksi risiko penyakit jantung berbasis dataset `heart_disease_risk_2026.csv` yang memuat **9.000 pasien** dengan **26 fitur** klinis, demografis, dan gaya hidup. Pipeline mencakup seluruh tahapan data science:
+- **Eksplorasi Data (EDA)** & Visualisasi Statistik
+- **Data Preprocessing**, Encoding, & Feature Scaling
+- **Model Training** dengan 5-Fold Stratified Cross-Validation
+- **Evaluasi Komprehensif** (Accuracy, Precision, Recall, F1-Score, ROC-AUC)
+- **Feature Importance Analysis**
+- **Inference & Consensus Voting** untuk data pasien baru
+- **Serialisasi Artefak Model** ke folder `model/`
+- **Interactive Web App Dashboard (Streamlit)** dengan Jarum Gauge Meter & Switcher Tema.
 
-Proyek ini dibuat sebagai bagian dari portofolio data science.
+Proyek ini dirancang sebagai portofolio Data Science & Machine Learning.
 
 ---
 
@@ -17,9 +25,20 @@ Proyek ini dibuat sebagai bagian dari portofolio data science.
 ```
 Heart Disease Risk 2026/
 │
-├── heart_disease.ipynb            # ← Notebook utama (pipeline lengkap)
-├── heart_disease_risk_2026.csv    # ← Dataset (9.001 baris × 27 kolom)
-└── README.md                      # ← Dokumentasi ini
+├── app.py                         # ← Web Dashboard Streamlit utama
+├── requirements.txt               # ← Daftar dependensi Python
+├── README.md                      # ← Dokumentasi proyek ini
+│
+└── Prediction/
+    ├── heart_disease.ipynb        # ← Notebook Jupyter (8 Section lengkap)
+    ├── heart_disease_risk_2026.csv# ← Dataset pasien (9.000 baris × 26 fitur)
+    └── model/                     # ← Folder tempat penyimpanan model & scaler
+        ├── model_logistic_regression.pkl
+        ├── model_random_forest.pkl
+        ├── model_xgboost.pkl
+        ├── scaler.pkl
+        ├── feature_columns.pkl
+        └── model_metadata.json
 ```
 
 ---
@@ -28,10 +47,10 @@ Heart Disease Risk 2026/
 
 | Atribut | Detail |
 |---|---|
-| **Sumber** | Dataset sintetis 2026 |
-| **Jumlah Baris** | 9.001 pasien |
-| **Jumlah Fitur** | 26 fitur + 1 target |
-| **Target** | `has_heart_disease` (0 = Tidak, 1 = Ya) |
+| **Dataset** | `heart_disease_risk_2026.csv` |
+| **Jumlah Baris** | 9.000 pasien |
+| **Jumlah Fitur** | 25 fitur independen + 1 variabel target |
+| **Target** | `has_heart_disease` (0 = Tidak Berisiko, 1 = Berisiko Sakit Jantung) |
 
 ### Kategori Fitur
 
@@ -43,17 +62,17 @@ Heart Disease Risk 2026/
 | **Gula Darah** | `fasting_blood_sugar`, `hba1c` |
 | **Antropometri & Kardio** | `bmi`, `resting_heart_rate`, `max_heart_rate_achieved` |
 | **Gejala Klinis** | `chest_pain_type`, `exercise_induced_angina`, `st_depression` |
-| **Riwayat** | `family_history`, `smoker_status` |
+| **Riwayat Medis** | `family_history`, `smoker_status` |
 | **Gaya Hidup** | `alcohol_units_per_week`, `exercise_minutes_per_week`, `sleep_hours`, `stress_score`, `wearable_owner`, `daily_steps`, `diet_quality_score` |
 
 ---
 
-## 🗂️ Alur Notebook
+## 🗂️ Alur Notebook (`heart_disease.ipynb`)
 
 ```
 1. Import Library
        ↓
-2. Load & EDA
+2. Load & Eksplorasi Data (EDA)
    ├── Statistik deskriptif
    ├── Distribusi target (bar + pie chart)
    ├── Histogram fitur numerik per kelas
@@ -69,115 +88,91 @@ Heart Disease Risk 2026/
    └── StandardScaler (untuk Logistic Regression)
        ↓
 4. Training 3 Model + 5-Fold Cross-Validation
+   ├── Logistic Regression
+   ├── Random Forest Classifier
+   └── XGBoost Classifier
        ↓
 5. Evaluasi Model
-   ├── Tabel metrik (Accuracy, Precision, Recall, F1, ROC-AUC)
+   ├── Tabel metrik (Accuracy, Precision, Recall, F1, ROC-AUC, CV AUC)
    ├── Bar chart perbandingan metrik
-   ├── Confusion Matrix (3 model)
+   ├── Confusion Matrix 3 model
    ├── ROC Curve overlay
    └── Classification Report
        ↓
 6. Feature Importance
-   ├── Top-15 RF Feature Importance
+   ├── Top-15 Random Forest Feature Importance
    └── Top-15 XGBoost Feature Importance
        ↓
-7. Inference – Prediksi Pasien Baru
+7. Inference – Prediksi Data Pasien Baru
    ├── Input data pasien via dictionary
    ├── Preprocessing otomatis (konsisten dengan training)
-   ├── Prediksi + probabilitas dari 3 model
-   ├── Voting mayoritas
-   ├── Bar chart + Gauge chart
-   └── Tabel ringkasan hasil
+   ├── Prediksi & probabilitas dari 3 model
+   ├── Voting mayoritas (Consensus Voting)
+   └── Visualisasi Bar Chart & Gauge Chart
+       ↓
+8. Simpan Knowledge Model
+   ├── Export model .pkl ke folder model/
+   ├── Export scaler.pkl & feature_columns.pkl
+   ├── Export model_metadata.json
+   └── Verifikasi konsistensi prediksi ulang
 ```
 
 ---
 
-## 🤖 Model yang Digunakan
+## 🤖 Model Machine Learning
 
 | Model | Library | Konfigurasi Utama |
 |---|---|---|
-| **Logistic Regression** | `sklearn` | `max_iter=1000`, `solver='lbfgs'`, data di-scale |
-| **Random Forest** | `sklearn` | `n_estimators=200`, `n_jobs=-1` |
-| **XGBoost** | `xgboost` | `n_estimators=200`, `lr=0.1`, `max_depth=6` |
+| **Logistic Regression** | `scikit-learn` | `max_iter=1000`, `solver='lbfgs'`, Feature Scaled |
+| **Random Forest** | `scikit-learn` | `n_estimators=200`, `min_samples_split=5`, `n_jobs=-1` |
+| **XGBoost** | `xgboost` | `n_estimators=200`, `learning_rate=0.1`, `max_depth=6` |
 
-Evaluasi menggunakan **5-Fold Stratified Cross-Validation** untuk estimasi performa yang robust.
-
----
-
-## 📈 Metrik Evaluasi
-
-Setiap model dievaluasi menggunakan:
-
-- **Accuracy** – proporsi prediksi benar secara keseluruhan
-- **Precision** – dari yang diprediksi positif, berapa yang benar-benar positif
-- **Recall** – dari yang benar-benar positif, berapa yang berhasil terdeteksi
-- **F1-Score** – harmonic mean precision & recall
-- **ROC-AUC** – kemampuan diskriminasi model (area under ROC curve)
-- **CV AUC** – rata-rata ROC-AUC pada 5-fold cross-validation
+Semua model dievaluasi dengan **5-Fold Stratified Cross-Validation** untuk memastikan konsistensi dan mencegah overfitting.
 
 ---
 
-## 🔬 Fitur Inference Pasien Baru
-
-Section 7 notebook memungkinkan pengguna **memasukkan data pasien baru** dan langsung mendapatkan prediksi dari ketiga model:
-
-```python
-data_pasien_baru = {
-    'age'                       : 55,
-    'sex'                       : 'Male',
-    'resting_bp_systolic'       : 140,
-    'chest_pain_type'           : 'Asymptomatic',
-    'smoker_status'             : 'Former',
-    # ... (25 fitur lengkap)
-}
-```
-
-Output yang dihasilkan:
-- ✅ / ⚠️ label prediksi per model
-- Probabilitas risiko (%) per model
-- **Voting mayoritas** dari 3 model
-- **Gauge chart** probabilitas rata-rata
-- Tabel ringkasan lengkap
-
-> ⚠️ **Disclaimer:** Prediksi bersifat indikatif dan **bukan pengganti diagnosis medis** dari tenaga kesehatan profesional.
-
----
-
-## 🌐 Web Application (Streamlit Dashboard)
+## 🌐 Web Application Dashboard (`app.py`)
 
 Aplikasi Web Interaktif berbasis **Streamlit** untuk eksplorasi visualisasi data dan inferensi prediksi risiko secara real-time.
 
-### Fitur Web App:
-- 🎨 **Toggle Tema Interaktif**: Pilihan **🌙 Dark Mode** / **☀️ Light Mode**.
-- 📊 **Dashboard Overview**: KPI Metrics, Pie/Donut Chart Prevalensi, Breakdown Usia & Gender, Chest Pain & Merokok, serta Plotly Heatmap Korelasi Interaktif.
-- 🧪 **Analisis Klinis & Gaya Hidup**: Sebaran Tekanan Darah, Boxplot Profil Lipid, Gula Darah vs HbA1c, Stress vs Langkah Harian, dan Scatter 3D Interaktif.
-- 🎯 **Prediksi Real-time Pasien Baru**: Form input parameter klinis lengkap, prediksi ensemble (Logistic Regression, Random Forest, XGBoost), Consensus Voting, dan Gauge Meter Probabilitas Interaktif.
-- 📋 **Eksplorasi & Export Data**: Filter data interaktif & opsi download CSV.
+### Fitur Unggulan Web App:
+- 🎨 **Dynamic Theme Switcher**: Pilihan **`🌙 Dark Mode`** / **`☀️ Light Mode`** yang mengubah warna antarmuka dan visualisasi secara konsisten.
+- 📊 **Dashboard Overview**: KPI Metrics (Total Pasien, Prevalensi, BP, Kolesterol), Pie Chart Prevalensi, Breakdown Usia & Gender, Chest Pain & Merokok, serta Plotly Heatmap Korelasi.
+- 🧪 **Analisis Klinis & Gaya Hidup**: 
+  - Grafik Scatter SVG (Tekanan Darah, Gula Darah vs HbA1c, Langkah Harian vs Stress Score) yang *bebas error WebGL*.
+  - Boxplot Profil Lipid (Kolesterol, HDL, LDL, Triglycerides).
+  - Mode Switcher Visualisasi Multivariat: **2D Bubble Chart (SVG)** vs **3D Scatter Plot**.
+- 🎯 **Prediksi Real-time Pasien Baru**:
+  - Form input interaktif 25 parameter medis & gaya hidup.
+  - Prediksi ensemble 3 model ML secara bersamaan.
+  - **Consensus Voting** (Keputusan Akhir).
+  - **Plotly Semi-Circle Gauge Meter** dengan **Jarum Penunjuk Dinamis (*Needle Arrow Pointer*)**.
+- 📋 **Eksplorasi & Export Data**: Global Filters (Rentang Usia, Gender, Status Merokok, Diagnosis) & Tombol Download CSV Terfilter.
 
 ---
 
-## 🛠️ Instalasi & Cara Menjalankan
+## 🛠️ Panduan Instalasi & Cara Menjalankan
 
-### 1. Clone repositori
+### 1. Clone Repositori
 
 ```bash
 git clone https://github.com/<username>/heart-disease-risk-2026.git
 cd heart-disease-risk-2026
 ```
 
-### 2. Install dependencies
+### 2. Install Dependensi
 
 ```bash
-pip install numpy pandas matplotlib seaborn scikit-learn xgboost jupyter plotly streamlit joblib
+pip install -r requirements.txt
 ```
 
-### 3. Jalankan Aplikasi Streamlit
+### 3. Jalankan Web Application (Streamlit)
 
 ```bash
 streamlit run app.py
 ```
 
-### 4. Jalankan Notebook (Opsional)
+### 4. Jalankan Jupyter Notebook (Opsional)
 
 ```bash
 jupyter notebook Prediction/heart_disease.ipynb
@@ -185,49 +180,51 @@ jupyter notebook Prediction/heart_disease.ipynb
 
 ---
 
-## 📦 Dependencies
+## 📦 Dependensi Utama (`requirements.txt`)
 
-| Library | Versi Minimum | Fungsi |
+| Library | Versi | Fungsi |
 |---|---|---|
-| `streamlit` | ≥ 1.25 | Web App Dashboard |
-| `plotly` | ≥ 5.10 | Visualisasi Grafis Interaktif |
-| `numpy` | ≥ 1.23 | Komputasi numerik |
-| `pandas` | ≥ 1.5 | Manipulasi data |
-| `scikit-learn` | ≥ 1.1 | Preprocessing & model ML |
-| `xgboost` | ≥ 1.7 | Model XGBoost classifier |
-| `joblib` | ≥ 1.2 | Load model & scaler |
+| `streamlit` | ≥ 1.25.0 | Web Application Framework |
+| `plotly` | ≥ 5.10.0 | Grafik & Visualisasi Interaktif |
+| `scikit-learn` | ≥ 1.1.0 | Preprocessing, Scaling, & Model ML |
+| `xgboost` | ≥ 1.7.0 | Gradient Boosting Model |
+| `pandas` | ≥ 1.5.0 | Manipulasi & Pengolahan Dataframe |
+| `numpy` | ≥ 1.23.0 | Komputasi Numerik |
+| `joblib` | ≥ 1.2.0 | Serialisasi / Load Model & Scaler |
+| `matplotlib` | ≥ 3.6.0 | Plotting Statistikal Notebook |
+| `seaborn` | ≥ 0.12.0 | Styling Grafik Notebook |
 
 ---
 
-## 🗺️ Roadmap
+## 🗺️ Roadmap Proyek
 
-- [x] EDA lengkap dengan visualisasi interaktif
-- [x] Pipeline preprocessing yang konsisten
-- [x] Training & evaluasi 3 model
-- [x] Inference data pasien baru dengan voting
-- [x] Web Application Dashboard (Streamlit dengan Dark/Light Mode)
-- [ ] Hyperparameter tuning (GridSearchCV / Optuna)
-- [ ] SHAP values untuk explainability
-- [ ] Handling imbalanced class (SMOTE / class_weight)
+- [x] Exploratory Data Analysis (EDA) komprehensif & visualisasi statistik
+- [x] Pipeline Preprocessing & Feature Scaling konsisten
+- [x] Training & evaluasi 3 Model Machine Learning
+- [x] Inkrementasi Section 8: Serialisasi Artefak Model & Metadata
+- [x] Penanganan rendering grafik tanpa WebGL (SVG Fallback)
+- [x] Implementasi Gauge Meter dengan Jarum Penunjuk (*Needle Arrow Pointer*)
+- [x] Deployment Web Application (Streamlit Dashboard dengan Dark/Light Theme)
+- [ ] Hyperparameter Tuning menggunakan Optuna / GridSearchCV
+- [ ] Implementasi Model Interpretability (SHAP / LIME Values)
 
 ---
 
-## 👤 Author
+## 👤 Author & Portofolio
 
-**[Nama Kamu]**  
-📧 email@example.com  
-🔗 [LinkedIn](https://linkedin.com/in/username) | [GitHub](https://github.com/username)
+**Antigravity Pair Programmer**  
+📧 *Data Science & Machine Learning Portfolio*
 
 ---
 
 ## 📄 Lisensi
 
-Proyek ini menggunakan lisensi [MIT](LICENSE). Silakan gunakan dan modifikasi sesuai kebutuhan.
+Proyek ini terlisensi di bawah [MIT License](LICENSE). Silakan gunakan dan kembangkan sesuai kebutuhan.
 
 ---
 
 <div align="center">
 
-⭐ **Jika proyek ini bermanfaat, jangan lupa beri star!** ⭐
+⭐ **Jika proyek ini membantu atau bermanfaat, jangan lupa berikan Star di GitHub!** ⭐
 
 </div>
