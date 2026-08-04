@@ -143,6 +143,19 @@ Output yang dihasilkan:
 
 ---
 
+## 🌐 Web Application (Streamlit Dashboard)
+
+Aplikasi Web Interaktif berbasis **Streamlit** untuk eksplorasi visualisasi data dan inferensi prediksi risiko secara real-time.
+
+### Fitur Web App:
+- 🎨 **Toggle Tema Interaktif**: Pilihan **🌙 Dark Mode** / **☀️ Light Mode**.
+- 📊 **Dashboard Overview**: KPI Metrics, Pie/Donut Chart Prevalensi, Breakdown Usia & Gender, Chest Pain & Merokok, serta Plotly Heatmap Korelasi Interaktif.
+- 🧪 **Analisis Klinis & Gaya Hidup**: Sebaran Tekanan Darah, Boxplot Profil Lipid, Gula Darah vs HbA1c, Stress vs Langkah Harian, dan Scatter 3D Interaktif.
+- 🎯 **Prediksi Real-time Pasien Baru**: Form input parameter klinis lengkap, prediksi ensemble (Logistic Regression, Random Forest, XGBoost), Consensus Voting, dan Gauge Meter Probabilitas Interaktif.
+- 📋 **Eksplorasi & Export Data**: Filter data interaktif & opsi download CSV.
+
+---
+
 ## 🛠️ Instalasi & Cara Menjalankan
 
 ### 1. Clone repositori
@@ -155,22 +168,20 @@ cd heart-disease-risk-2026
 ### 2. Install dependencies
 
 ```bash
-pip install numpy pandas matplotlib seaborn scikit-learn xgboost jupyter
+pip install numpy pandas matplotlib seaborn scikit-learn xgboost jupyter plotly streamlit joblib
 ```
 
-Atau menggunakan `requirements.txt` jika tersedia:
+### 3. Jalankan Aplikasi Streamlit
 
 ```bash
-pip install -r requirements.txt
+streamlit run app.py
 ```
 
-### 3. Jalankan notebook
+### 4. Jalankan Notebook (Opsional)
 
 ```bash
-jupyter notebook heart_disease.ipynb
+jupyter notebook Prediction/heart_disease.ipynb
 ```
-
-Pastikan file `heart_disease_risk_2026.csv` berada di **folder yang sama** dengan notebook.
 
 ---
 
@@ -178,13 +189,13 @@ Pastikan file `heart_disease_risk_2026.csv` berada di **folder yang sama** denga
 
 | Library | Versi Minimum | Fungsi |
 |---|---|---|
+| `streamlit` | ≥ 1.25 | Web App Dashboard |
+| `plotly` | ≥ 5.10 | Visualisasi Grafis Interaktif |
 | `numpy` | ≥ 1.23 | Komputasi numerik |
 | `pandas` | ≥ 1.5 | Manipulasi data |
-| `matplotlib` | ≥ 3.6 | Visualisasi |
-| `seaborn` | ≥ 0.12 | Visualisasi statistik |
-| `scikit-learn` | ≥ 1.1 | Preprocessing & model |
-| `xgboost` | ≥ 1.7 | XGBoost classifier |
-| `jupyter` | ≥ 1.0 | Menjalankan notebook |
+| `scikit-learn` | ≥ 1.1 | Preprocessing & model ML |
+| `xgboost` | ≥ 1.7 | Model XGBoost classifier |
+| `joblib` | ≥ 1.2 | Load model & scaler |
 
 ---
 
@@ -194,9 +205,9 @@ Pastikan file `heart_disease_risk_2026.csv` berada di **folder yang sama** denga
 - [x] Pipeline preprocessing yang konsisten
 - [x] Training & evaluasi 3 model
 - [x] Inference data pasien baru dengan voting
+- [x] Web Application Dashboard (Streamlit dengan Dark/Light Mode)
 - [ ] Hyperparameter tuning (GridSearchCV / Optuna)
 - [ ] SHAP values untuk explainability
-- [ ] Deployment sebagai web app (Streamlit / FastAPI)
 - [ ] Handling imbalanced class (SMOTE / class_weight)
 
 ---
